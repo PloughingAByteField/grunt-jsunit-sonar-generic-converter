@@ -3,6 +3,8 @@
 
 > Grunt plugin for converting jsunit reports to the sonar generic test coverage format for usage with sonar.
 
+DO NOT USE YET -- NOT COMPLETE OR WORKING -- IN SETUP
+
 Both karma and protractor can output jsunit reports, this plugin can convert these reports into the format expected by the sonar Generic Test Coverage plugin.
 
 Details on the <a href="http://docs.sonarqube.org/display/PLUG/Generic+Test+Coverage">Sonar Generic Test Coverage</a> format and plugin.
