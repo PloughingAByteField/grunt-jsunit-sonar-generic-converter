@@ -1,8 +1,9 @@
 /*
- * grunt-karma-sonar
- * https://github.com/mdasberg/grunt-karma-sonar
+ * grunt-jsunit-sonar-generic-converter
+ * https://github.com/PloughingAByteField/grunt-jsunit-sonar-generic-converter
  *
  * Copyright (c) 2013 Mischa Dasberg
+ * Copyright (c) 2016 John Reynolds
  * Licensed under the MIT license.
  */
 (function() {
@@ -29,14 +30,14 @@
                         },
                         dryRun: true,
                         runnerProperties: {
-                            'sonar.links.homepage': 'https://github.com/mdasberg/grunt-karma-sonar',
+                            'sonar.links.homepage': 'https://github.com/PloughingAByteField/grunt-jsunit-sonar-generic-converter',
                             'sonar.branch': 'master'
                         }
                     },
                     all: {
                         project: {
-                            key: 'grunt-karma-sonar',
-                            name: 'Grunt-karma-sonar plugin',
+                            key: 'grunt-jsunit-sonar-generic-converter',
+                            name: 'grunt-jsunit-sonar-generic-converter plugin',
                             version: '0.2.10'
                         },
                         paths: [

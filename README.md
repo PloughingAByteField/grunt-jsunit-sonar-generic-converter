@@ -1,13 +1,19 @@
-# grunt-karma-sonar 
-[![Build Status](https://travis-ci.org/mdasberg/grunt-karma-sonar.svg?branch=master)](https://travis-ci.org/mdasberg/grunt-karma-sonar) [![npm version](https://img.shields.io/node/v/grunt-karma-sonar.svg)](https://github.com/mdasberg/grunt-karma-sonar) [![dependency Status](https://img.shields.io/david/mdasberg/grunt-karma-sonar.svg)](https://david-dm.org/mdasberg/grunt-karma-sonar) [![devDependency Status](https://img.shields.io/david/dev/mdasberg/grunt-karma-sonar.svg)](https://david-dm.org/mdasberg/grunt-karma-sonar#info=devDependencies) [![npm downloads](https://img.shields.io/npm/dm/grunt-karma-sonar.svg?style=flat-square)](https://www.npmjs.com/package/grunt-karma-sonar)
+# grunt-jsunit-sonar-generic-converter
+[![Build Status](https://travis-ci.org/PloughingAByteField/grunt-jsunit-sonar-generic-converter.svg?branch=master)](https://travis-ci.org/PloughingAByteField/grunt-jsunit-sonar-generic-converter) [![npm version](https://img.shields.io/node/v/grunt-jsunit-sonar-generic-converter.svg)](https://github.com/PloughingAByteField/grunt-jsunit-sonar-generic-converter) [![dependency Status](https://img.shields.io/david/PloughingAByteField/grunt-jsunit-sonar-generic-converter.svg)](https://david-dm.org/PloughingAByteField/grunt-jsunit-sonar-generic-converter) [![devDependency Status](https://img.shields.io/david/dev/PloughingAByteField/grunt-jsunit-sonar-generic-converter.svg)](https://david-dm.org/PloughingAByteField/grunt-jsunit-sonar-generic-converter#info=devDependencies) [![npm downloads](https://img.shields.io/npm/dm/grunt-jsunit-sonar-generic-converter.svg?style=flat-square)](https://www.npmjs.com/package/grunt-jsunit-sonar-generic-converter)
 
-> Grunt plugin for integrating karma and protractor reports with sonar.
+> Grunt plugin for converting jsunit reports to the sonar generic test coverage format for usage with sonar.
 
-Currently the following frameworks are supported for both unit and integration testing: 
-- jasmine / jasmine2 (the default)
-- cucumber
+Both karma and protractor can output jsunit reports, this plugin can convert these reports into the format expected by the sonar Generic Test Coverage plugin.
 
-To enable integration test result and coverage in Sonar, you need to install the following plugin [sonar-javascript-integrationtests](https://github.com/nvnoorloos/sonar-javascript-integrationtests)
+Details on the <a href="http://docs.sonarqube.org/display/PLUG/Generic+Test+Coverage">Sonar Generic Test Coverage</a> format and plugin.
+
+This plugin has been created due to jsunit reporting no longer being supported by sonarsource see <a href="http://docs.sonarqube.org/display/PLUG/JavaScript+Unit+Tests+Execution+Reports+Import">JavaScriptUnit Tests Execution Reports Import</a>.
+
+This has been forked from the <a href="https://github.com/mdasberg/grunt-karma-sonar">mdasberg/grunt-karma-sonar</a> project. If your project is solely js based then you can investigate this.
+
+This is intended for use in a multi language project with one pass through sonar and one of those languages being javascript.
+
+The targeted sonar server version is 5.6 LTS onwards.
 
 ## Getting Started
 This plugin requires Grunt `~0.4.5`
@@ -15,23 +21,23 @@ This plugin requires Grunt `~0.4.5`
 If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:
 
 ```shell
-npm install grunt-karma-sonar --save-dev
+npm install grunt-jsunit-sonar-generic-converter --save-dev
 ```
 
 Once the plugin has been installed, it may be enabled inside your Gruntfile with this line of JavaScript:
 
 ```js
-grunt.loadNpmTasks('grunt-karma-sonar');
+grunt.loadNpmTasks('grunt-jsunit-sonar-generic-converter');
 ```
 
-## The "karmaSonar" task
+## The "jsunitConvertor" task
 
 ### Overview
-In your project's Gruntfile, add a section named `karmaSonar` to the data object passed into `grunt.initConfig()`.
+In your project's Gruntfile, add a section named `jsunitConvertor` to the data object passed into `grunt.initConfig()`.
 
 ```js
 grunt.initConfig({
-  karmaSonar: {
+  jsunitConvertor: {
     options: {
       // Task-specific options go here.
     },
@@ -72,7 +78,7 @@ Should be the sonar.property scmDisabled
 Type: `String`
 Default: '.tmp/sonar/'
 
-Should be the location where the karmaSonar plugin will put it's temporary files.
+Should be the location where the jsunitConvertor plugin will put it's temporary files.
 
 #### options.excludedProperties
 Type: `Array`
@@ -91,7 +97,7 @@ Should be the list of key(`sonar key`) value pairs.
 
 ```js
 runnerProperties: {
-    'sonar.links.homepage': 'https://github.com/mdasberg/grunt-karma-sonar',
+    'sonar.links.homepage': 'https://github.com/PloughingAByteField/grunt-jsunit-sonar-generic-converter',
     'sonar.branch': 'master'
 }
 ```
@@ -215,16 +221,12 @@ Should be the glob for the integration test lcov.info files within the cwd.
 
 ```js
 grunt.initConfig({
-  karmaSonar: {
+  jsunitConvertor: {
     options: {
     
     },
     your_target: {
-      project: {
-        key: 'grunt-sonar',
-        name: 'Grunt sonar plugin',
-        version: '0.2.13'
-      },
+
       paths: [
         {
           cwd: '...', // the current working directory'
@@ -257,7 +259,7 @@ In this example, custom options are used to do something else with whatever else
 
 ```js
 grunt.initConfig({
-  karmaSonar: {
+  jsunitConvertor: {
     options: {
       defaultOutputDir: '.tmp/sonar/custom_options/',
       instance: {
@@ -293,7 +295,7 @@ a download mirror url. To set a mirror, set npm config property `sonarrunner_cdn
 Default is ``.
 
 ```shell
-npm install grunt-karma-sonar --sonarrunner_cdnurl=http://some-mirror.org/path/to/downloads
+npm install grunt-jsunit-sonar-generic-converter --sonarrunner_cdnurl=http://some-mirror.org/path/to/downloads
 ```
 
 Or add property into your `.npmrc` file (https://www.npmjs.org/doc/files/npmrc.html)
@@ -304,7 +306,7 @@ sonarrunner_cdnurl=http://some-mirror.org/path/to/downloads
 
 Another option is to use PATH variable `SONARRUNNER_CDNURL`.
 ```shell
-SONARRUNNER_CDNURL=http://some-mirror.org/path/to/downloads npm install grunt-karma-sonar
+SONARRUNNER_CDNURL=http://some-mirror.org/path/to/downloads npm install grunt-jsunit-sonar-generic-converter
 ```
 
 Note: It will try to find `sonar-runner-dist.zip` in the cdn url.
@@ -316,7 +318,7 @@ a download mirror directory. To set a mirror, set npm config property `sonarrunn
 Default is ``.
 
 ```shell
-npm install grunt-karma-sonar --sonarrunner_cdndir=/some/path/downloads
+npm install grunt-jsunit-sonar-generic-converter --sonarrunner_cdndir=/some/path/downloads
 ```
 
 Or add property into your `.npmrc` file (https://www.npmjs.org/doc/files/npmrc.html)
@@ -327,7 +329,7 @@ sonarrunner_cdndir=/some/path/downloads
 
 Another option is to use PATH variable `SONARRUNNER_CDNDIR`.
 ```shell
-SONARRUNNER_CDNDIR=/some/path/downloads npm install grunt-karma-sonar
+SONARRUNNER_CDNDIR=/some/path/downloads npm install grunt-jsunit-sonar-generic-converter
 ```
 
 Note: It can be the case that there are multiple versions available at the download mirror. 

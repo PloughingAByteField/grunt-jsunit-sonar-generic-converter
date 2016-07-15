@@ -1,23 +1,23 @@
 {
-  "name": "grunt-karma-sonar",
+  "name": "grunt-jsunit-sonar-generic-converter",
   "description": "Grunt plugin for integrating karma reports with sonar",
-  "version": "0.2.26",
-  "homepage": "https://github.com/mdasberg/grunt-karma-sonar",
+  "version": "0.0.1",
+  "homepage": "https://github.com/PloughingAByteField/grunt-jsunit-sonar-generic-converter",
   "author": {
-    "name": "Mischa Dasberg",
-    "email": "mischa@dasberg.nl"
+    "name": "John Reynolds",
+    "email": "john.reynolds.irl@acm.org"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/mdasberg/grunt-karma-sonar.git"
+    "url": "git://github.com/PloughingAByteField/grunt-jsunit-sonar-generic-converter.git"
   },
   "bugs": {
-    "url": "https://github.com/mdasberg/grunt-karma-sonar/issues"
+    "url": "https://github.com/PloughingAByteField/grunt-jsunit-sonar-generic-converter/issues"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/mdasberg/grunt-karma-sonar/blob/master/LICENSE-MIT"
+      "url": "https://github.com/PloughingAByteField/grunt-jsunit-sonar-generic-converter/blob/master/LICENSE-MIT"
     }
   ],
   "main": "Gruntfile.js",
