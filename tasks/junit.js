@@ -36,8 +36,6 @@
                     if (testcase.name === 'testcase') {
                         var name = xmlEntities.encode(testcase.attr.name),
                             classname = xmlEntities.encode(testcase.attr.classname),
-                            dirname = xmlEntities.encode(testcase.attr.dirname),
-                            extension = xmlEntities.encode(testcase.attr.extension),
                             duration = (parseFloat(xmlEntities.encode(testcase.attr.time)) * 1000);
 
                         var match = files.filter(function (file) {
@@ -47,7 +45,7 @@
                         var fileMatch;
                         if (match.length === 0) {
                             fileMatch = {
-                                path: 'test' + path.sep + dirname + path.sep + classname + extension,
+                                path: outputFile,
                                 testcases: []
                             };
                             files.push(fileMatch);
@@ -71,6 +69,7 @@
                         }
                         // #2
                         fileMatch.testcases.push(tc);
+
                     }
                 });
             }

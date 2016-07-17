@@ -13,7 +13,6 @@
                 dynamicAnalysis: 'reuseReports',
                 sourceEncoding: 'UTF-8',
                 language: 'js',
-                defaultOutputDir: '.tmp/sonar/',
                 scmDisabled: true,
                 excludedProperties: []
             };
@@ -22,30 +21,21 @@
          * Copy files to the temp directory.
          * @param g The glob.
          */
-        function copyFiles(g, defaultOutputDir, targetDir) {
-            var files = glob.sync(g.src.toString(), {cwd: g.cwd, root: '/'});
+        function copyFiles(g, outputDir) {
+            var files = glob.sync(g, {root: '/'});
             files.forEach(function (file) {
-                var destinationDirectory = defaultOutputDir + path.sep + targetDir;
+                var destinationDirectory = outputDir;
                 var fileDirectory = path.dirname(file);
+
                 if (fileDirectory !== '.') {
                     destinationDirectory = destinationDirectory + path.sep + fileDirectory;
                 }
                 fs.mkdirpSync(destinationDirectory);
-                var source = path.resolve(g.cwd, file);
                 var extension = path.extname(file);
-                var destination;
-                if (targetDir === 'test') {
-                    var base = path.basename(file, extension);
-                    if(extension === '.js') {
-                        destination = destinationDirectory + path.sep + path.basename(base.replace(/\./g, '_') + extension);
-                    } else if(extension === '.feature') {
-                        destination = destinationDirectory + path.sep + path.basename(base.concat(extension).replace(/\./g, '_') + '.js');
-                    }
-                } else {
-                    destination = destinationDirectory + path.sep + path.basename(file);
-                }
+                var destination = destinationDirectory + path.sep + path.basename(file);
 
-                fs.copySync(source, destination, {replace: true});
+                fs.copySync(file, destination, {replace: true});
+                junit.convert(destination, destination, 'unit');
             });
         }
 
@@ -74,81 +64,38 @@
         return {
             run: function (configuration) {
                 var data = configuration.data;
+                var opts = configuration.options({});
 
-                if (typeof data.project === 'undefined') {
-                    grunt.fail.fatal('No project information has been specified.');
-                }
-
-                if (typeof data.project.key === 'undefined') {
-                    grunt.fail.fatal('Missing project key. Allowed characters are alphanumeric, \'-\', \'_\', \'.\' and \':\', with at least one non-digit.');
-                }
-
-                if (typeof data.project.name === 'undefined') {
-                    grunt.fail.fatal('Missing project name. Please provide one.');
+                if (typeof opts.outputDir === 'undefined' || opts.outputDir.length === 0) {
+                    grunt.fail.fatal('No outputDir provided.');
                 }
 
                 if (typeof data.paths === 'undefined' || data.paths.length === 0) {
                     grunt.fail.fatal('No paths provided. Please provide at least one.');
                 }
 
-                var sonarOptions = mergeJson(defaultOptions, configuration.options({})),
+                var options = mergeJson(defaultOptions, configuration.options({})),
                     done = configuration.async(),
-                    resultsDir = sonarOptions.defaultOutputDir + path.sep + 'results' + path.sep,
-                    xUnitResultFile = resultsDir + 'TESTS-xunit.xml',
-                    jUnitResultFile = resultsDir + 'TESTS-junit.xml',
-                    itJUnitResultFile = resultsDir + 'ITESTS-xunit.xml',
-                    coverageResultFile = resultsDir + 'coverage_report.lcov',
-                    itCoverageResultFile = resultsDir + 'it_coverage_report.lcov';
+                    resultsDir = options.outputDir + path.sep;
 
                 async.series({
-                        // #1
-                        mergeJUnitReports: function (callback) {
-                            grunt.verbose.writeln('Merging JUnit reports');
-                            xunit.merge(data.paths, xUnitResultFile, 'unit');
-                            junit.convert(xUnitResultFile, jUnitResultFile, 'unit');
-                            callback(null, 200);
-                        },
-                        // #2
-                        mergeItJUnitReports: function (callback) {
-                            grunt.verbose.writeln('Merging Integration JUnit reports');
-                            xunit.merge(data.paths, itJUnitResultFile, 'itUnit');
-                            callback(null, 200);
-                        },
-                        // #3
-                        mergeCoverageReports: function (callback) {
-                            grunt.verbose.writeln('Merging Coverage reports');
-                            coverage.merge(data.paths, coverageResultFile, 'coverage');
-                            callback(null, 200);
-                        },
-                        // #4
-                        mergeItCoverageReports: function (callback) {
-                            grunt.verbose.writeln('Merging Integration Coverage reports');
-                            coverage.merge(data.paths, itCoverageResultFile, 'itCoverage');
-                            callback(null, 200);
-                        },
-                        // #5
                         copy: function (callback) {
-                            grunt.verbose.writeln('Copying files to working directory [' + sonarOptions.defaultOutputDir + ']');
+                            grunt.verbose.writeln('Copying files to working directory [' + options.outputDir + ']');
                             var sourceGlobs = [],
                                 testGlobs = [];
                         
                             data.paths.forEach(function (p) {
-                                var cwd = p.cwd ? p.cwd : '.';
-                                sourceGlobs.push({cwd: cwd + path.sep + p.src, src: '**/*.*'});
-                                testGlobs.push({cwd: cwd + path.sep + p.test, src: '**/*.js'});
-                                testGlobs.push({cwd: cwd + path.sep + p.test, src: '**/*.feature'});
+                                var jsunit = p.jsunit ? p.jsunit : '.';
+                                sourceGlobs.push(jsunit);
                             });
-                        
+
                             sourceGlobs.forEach(function (g) {
-                                copyFiles(g, sonarOptions.defaultOutputDir, 'src');
+                                copyFiles(g, opts.outputDir);
                             });
-                        
-                            testGlobs.forEach(function (g) {
-                                copyFiles(g, sonarOptions.defaultOutputDir, 'test');
-                            });
+
                             callback(null, 200);
                         },
-                      }
+
                     },
                     function (err) {
                         if (err !== undefined && err !== null) {

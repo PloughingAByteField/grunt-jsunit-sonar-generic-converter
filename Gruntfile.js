@@ -22,61 +22,20 @@
                         jshintrc: '.jshintrc'
                     }
                 },
-                karmaSonar: {
+                jsunitConvertor: {
                     options: {
-                        defaultOutputDir: '.tmp/sonar2',
-                        instance: {
-                            jdbcUrl: 'jdbc:h2:tcp://localhost:9092/sonar'
-                        },
-                        dryRun: true,
-                        runnerProperties: {
-                            'sonar.links.homepage': 'https://github.com/PloughingAByteField/grunt-jsunit-sonar-generic-converter',
-                            'sonar.branch': 'master'
-                        }
+                        outputDir: 'test/generic'
                     },
                     all: {
-                        project: {
-                            key: 'grunt-jsunit-sonar-generic-converter',
-                            name: 'grunt-jsunit-sonar-generic-converter plugin',
-                            version: '0.2.10'
-                        },
                         paths: [
                             {
-                                cwd: 'node_modules/angular-test-setup',
-                                src: 'src',
-                                test: 'test',
-                                reports: {
-                                    unit: 'results/karma/TESTS*.xml',
-                                    itUnit: {src:'results/protractor/cucumber/chrome/*.xml', framework: 'cucumber'},
-                                    coverage: 'results/karma/coverage/**/lcov.info',
-                                    itCoverage: 'results/protractor-coverage/**/lcov.info'
-                                }
+                                jsunit: 'node_modules/angular-test-setup/results/karma/TESTS*.xml'
                             },
                             {
-                                cwd: 'node_modules/angular-test-setup',
-                                src: 'src',
-                                test: 'test',
-                                reports: {
-                                    itUnit: {src:'results/protractor/jasmine2/chrome/*.xml', framework: 'jasmine2'}
-                                }
+                                jsunit: 'data/projectx/results/karma/results.xml'
                             },
                             {
-                                cwd: 'data/projectx',
-                                src: 'src',
-                                test: 'test',
-                                reports: {
-                                    unit: 'results/karma/results.xml',
-                                    coverage: 'results/karma/coverage/**/lcov.info'
-                                }
-                            },
-                            {
-                                cwd: 'data/karma02x',
-                                src: 'src',
-                                test: 'test',
-                                reports: {
-                                    unit: 'results/karma/results.xml',
-                                    coverage: 'results/unit/coverage/**/lcov.info'
-                                }
+                                jsunit: 'data/karma02x/results/karma/results.xml'
                             }
                         ]
                     }
@@ -87,7 +46,7 @@
                     options: {
                         force: true
                     },
-                    tests: ['.tmp'],
+                    tests: ['test/generic'],
                     install: ['lib']
                 },
 
